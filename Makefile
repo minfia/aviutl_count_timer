@@ -1,4 +1,4 @@
-PROG := count_timer
+PROG := カウントタイマー
 SRCS := main
 EXTENTION := .obj
 
