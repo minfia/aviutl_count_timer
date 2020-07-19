@@ -6,7 +6,7 @@
 --track1:ライン幅,0,2000,30
 --track2:文字サイズ,0,1000,50
 --dialog:フォント,local font="MS UI Gothic";小数桁数,local digit=2;文字の色/col,local char_color=0xffffff;リングの色/col,local ring_color=0xffffff;カウントダウン/chk,local count_down=0;反時計回り/chk,local ccw=0;文字表示/chk,local visible_char=1;リング表示/chk,local visible_ring=1;
-
+--check0:時分秒表記,0
 
 local total_time = obj.totaltime
 local now_time = obj.time
@@ -17,30 +17,36 @@ local r
 
 
 if (count_down == 0) then
--- カウントアップ
+	-- カウントアップ
 	time = now_time
 	r = (180 - (now_time * (180 / total_time)))
 else
--- カウントダウン
+	-- カウントダウン
 	time = total_time - now_time
 	r = (now_time * (180 / total_time))
 end
 
 
-if (digit == 0) then
-	time_str = string.format("%d", time)
-elseif (digit == 1) then
-	time_str = string.format("%.1f", time)
-elseif (digit == 2) then
-	time_str = string.format("%.2f", time)
-elseif (digit == 3) then
-	time_str = string.format("%.3f", time)
-elseif (digit == 4) then
-	time_str = string.format("%.4f", time)
-elseif (digit == 5) then
-	time_str = string.format("%.5f", time)
+if (not obj.check0) then
+	-- 秒表記
+	if (digit == 0) then
+		time_str = string.format("%d", time)
+	elseif (digit == 1) then
+		time_str = string.format("%.1f", time)
+	elseif (digit == 2) then
+		time_str = string.format("%.2f", time)
+	elseif (digit == 3) then
+		time_str = string.format("%.3f", time)
+	elseif (digit == 4) then
+		time_str = string.format("%.4f", time)
+	elseif (digit == 5) then
+		time_str = string.format("%.5f", time)
+	else
+		time_str = string.format("%.6f", time)
+	end
 else
-	time_str = string.format("%.6f", time)
+	-- 時分秒表記
+	time_str = string.format("%02d:%02d:%02d", (time/3600), ((time%3600)/60), (time %60))
 end
 
 -- リング生成
