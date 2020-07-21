@@ -49,7 +49,7 @@ else
 	time_str = string.format("%02d:%02d:%02d", (time/3600), ((time%3600)/60), (time %60))
 end
 
-obj.setoption("drawtarget", "tempbuffer", obj.screen_w, obj.screen_h)
+obj.setoption("drawtarget", "tempbuffer", obj.track0, obj.track0)
 
 -- ÉäÉìÉOê∂ê¨
 if (visible_ring == 1) then
