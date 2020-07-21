@@ -49,6 +49,8 @@ else
 	time_str = string.format("%02d:%02d:%02d", (time/3600), ((time%3600)/60), (time %60))
 end
 
+obj.setoption("drawtarget", "tempbuffer", obj.screen_w, obj.screen_h)
+
 -- ÉäÉìÉOê∂ê¨
 if (visible_ring == 1) then
 	obj.load("figure", "â~", ring_color, l * 2, obj.track1)
@@ -72,4 +74,6 @@ if (visible_char == 1) then
 	obj.load("text", time_str)
 	obj.draw()
 end
+
+obj.load("tempbuffer")
 
