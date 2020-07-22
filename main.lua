@@ -5,7 +5,7 @@
 --track0:サイズ,0,2000,200
 --track1:ライン幅,0,2000,30
 --track2:文字サイズ,0,1000,50
---dialog:フォント,local font="MS UI Gothic";小数桁数,local digit=2;文字の色/col,local char_color=0xffffff;リングの色/col,local ring_color=0xffffff;カウントダウン/chk,local count_down=0;反時計回り/chk,local ccw=0;文字表示/chk,local visible_char=1;リング表示/chk,local visible_ring=1;
+--dialog:font,local font="MS UI Gothic";小数桁数,local digit=2;文字の色/col,local char_color=0xffffff;色分割の割合,local rate={60,30};リングの色(開始)/col,local ring_color_start=0xffffff;リングの色(中間)/col,local ring_color_middle=0xffffff;リングの色(終了)/col,local ring_color_end=0xffffff;カウントダウン/chk,local count_down=0;反時計回り/chk,local ccw=0;文字表示/chk,local visible_char=1;リング表示/chk,local visible_ring=1;
 --check0:時分秒表記,0
 
 local total_time = obj.totaltime
@@ -47,6 +47,16 @@ if (not obj.check0) then
 else
 	-- 時分秒表記
 	time_str = string.format("%02d:%02d:%02d", (time/3600), ((time%3600)/60), (time %60))
+end
+
+local ring_color
+local time_rate = 100 - ((now_time / total_time) * 100)
+if (time_rate < rate[2]) then
+	ring_color = ring_color_end
+elseif (time_rate < rate[1]) then
+	ring_color = ring_color_middle
+else
+	ring_color = ring_color_start
 end
 
 obj.setoption("drawtarget", "tempbuffer", obj.track0, obj.track0)
