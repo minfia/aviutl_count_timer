@@ -17,72 +17,72 @@ local r
 
 
 if (count_down == 0) then
-	-- カウントアップ
-	time = now_time
-	r = (180 - (now_time * (180 / total_time)))
+  -- カウントアップ
+  time = now_time
+  r = (180 - (now_time * (180 / total_time)))
 else
-	-- カウントダウン
-	time = total_time - now_time
-	r = (now_time * (180 / total_time))
+  -- カウントダウン
+  time = total_time - now_time
+  r = (now_time * (180 / total_time))
 end
 
 
 if (not obj.check0) then
-	-- 秒表記
-	if (digit == 0) then
-		time_str = string.format("%d", time)
-	elseif (digit == 1) then
-		time_str = string.format("%.1f", time)
-	elseif (digit == 2) then
-		time_str = string.format("%.2f", time)
-	elseif (digit == 3) then
-		time_str = string.format("%.3f", time)
-	elseif (digit == 4) then
-		time_str = string.format("%.4f", time)
-	elseif (digit == 5) then
-		time_str = string.format("%.5f", time)
-	else
-		time_str = string.format("%.6f", time)
-	end
+  -- 秒表記
+  if (digit == 0) then
+    time_str = string.format("%d", time)
+  elseif (digit == 1) then
+    time_str = string.format("%.1f", time)
+  elseif (digit == 2) then
+    time_str = string.format("%.2f", time)
+  elseif (digit == 3) then
+    time_str = string.format("%.3f", time)
+  elseif (digit == 4) then
+    time_str = string.format("%.4f", time)
+  elseif (digit == 5) then
+    time_str = string.format("%.5f", time)
+  else
+    time_str = string.format("%.6f", time)
+  end
 else
-	-- 時分秒表記
-	time_str = string.format("%02d:%02d:%02d", (time/3600), ((time%3600)/60), (time %60))
+  -- 時分秒表記
+  time_str = string.format("%02d:%02d:%02d", (time/3600), ((time%3600)/60), (time %60))
 end
 
 local ring_color
 local time_rate = 100 - ((now_time / total_time) * 100)
 if (time_rate < rate[2]) then
-	ring_color = ring_color_end
+  ring_color = ring_color_end
 elseif (time_rate < rate[1]) then
-	ring_color = ring_color_middle
+  ring_color = ring_color_middle
 else
-	ring_color = ring_color_start
+  ring_color = ring_color_start
 end
 
 obj.setoption("drawtarget", "tempbuffer", obj.track0, obj.track0)
 
 -- リング生成
 if (visible_ring == 1) then
-	obj.load("figure", "円", ring_color, l * 2, obj.track1)
-	obj.effect("斜めクリッピング", "角度", r)
-	obj.effect("ミラー", "境目調整", -l)
+  obj.load("figure", "円", ring_color, l * 2, obj.track1)
+  obj.effect("斜めクリッピング", "角度", r)
+  obj.effect("ミラー", "境目調整", -l)
 
-	local rz
-	if (ccw == count_down) then
-		-- 時計回り
-		rz = (90 + r * -100 / 100)
-	else
-		-- 反時計回り
-		rz = (90 + r * 100 / 100)
-	end
-	obj.draw(0, 0, 0, 1, 1, 0, 0, rz)
+  local rz
+  if (ccw == count_down) then
+    -- 時計回り
+    rz = (90 + r * -100 / 100)
+  else
+    -- 反時計回り
+    rz = (90 + r * 100 / 100)
+  end
+  obj.draw(0, 0, 0, 1, 1, 0, 0, rz)
 end
 
 -- 文字生成
 if (visible_char == 1) then
-	obj.setfont(font, obj.track2, 0, char_color)
-	obj.load("text", time_str)
-	obj.draw()
+  obj.setfont(font, obj.track2, 0, char_color)
+  obj.load("text", time_str)
+  obj.draw()
 end
 
 obj.load("tempbuffer")
