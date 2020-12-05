@@ -5,7 +5,7 @@
 --track0:サイズ,0,2000,200
 --track1:ライン幅,0,2000,30
 --track2:文字サイズ,0,1000,50
---dialog:font,local font="MS UI Gothic";小数桁数,local digit=2;文字の色/col,local char_color=0xffffff;色分割の割合,local rate={60,30};リングの色(開始)/col,local ring_color_start=0xffffff;リングの色(中間)/col,local ring_color_middle=0xffffff;リングの色(終了)/col,local ring_color_end=0xffffff;カウントダウン/chk,local count_down=0;反時計回り/chk,local ccw=0;
+--dialog:font,local font="MS UI Gothic";小数桁数,local digit=2;文字の色/col,local char_color=0xffffff;色分割の割合,local rate={60,30};リングの色(開始)/col,local ring_color_start=0xffffff;リングの色(中間)/col,local ring_color_middle=0xffffff;リングの色(終了)/col,local ring_color_end=0xffffff;カウントダウン/chk,local count_down=0;反時計回り/chk,local ccw=0;単位表示,local visible_unit=0;
 --check0:時分秒表記,0
 
 local total_time = obj.totaltime
@@ -46,7 +46,27 @@ if (not obj.check0) then
   end
 else
   -- 時分秒表記
-  time_str = string.format("%02d:%02d:%02d", (time / 3600), ((time % 3600) / 60), (time % 60))
+  local h_unit
+  local m_unit
+  local s_unit
+  if (visible_unit == 1) then
+    h_unit = "時"
+    m_unit = "分"
+    s_unit = "秒"
+  elseif (visible_unit == 2) then
+    h_unit = "h"
+    m_unit = "m"
+    s_unit = "s"
+  elseif (visible_unit == 3) then
+    h_unit = "°"
+    m_unit = "′"
+    s_unit = "\""
+  else
+    h_unit = ":"
+    m_unit = ":"
+    s_unit = ""
+  end
+    time_str = string.format("%02d%s%02d%s%02d%s", (time / 3600), h_unit, ((time % 3600) / 60), m_unit, (time % 60), s_unit)
 end
 
 local ring_color
