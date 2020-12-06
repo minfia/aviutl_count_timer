@@ -5,8 +5,45 @@
 --track0:サイズ,0,2000,200
 --track1:ライン幅,0,2000,30
 --track2:文字サイズ,0,1000,50
---dialog:font,local font="MS UI Gothic";小数桁数,local digit=2;文字の色/col,local char_color=0xffffff;色分割の割合,local rate={60,30};リングの色(開始)/col,local ring_color_start=0xffffff;リングの色(中間)/col,local ring_color_middle=0xffffff;リングの色(終了)/col,local ring_color_end=0xffffff;カウントダウン/chk,local count_down=0;反時計回り/chk,local ccw=0;単位表示,local visible_unit=0;
+--dialog:font,local font="MS UI Gothic";小数桁数,local digit=2;文字の色/col,local char_color=0xffffff;色分割の割合,local rate={60,30};リングの色(開始)/col,local ring_color_start=0xffffff;リングの色(中間)/col,local ring_color_middle=0xffffff;リングの色(終了)/col,local ring_color_end=0xffffff;カウントダウン/chk,local count_down=0;反時計回り/chk,local ccw=0;単位表示,local visible_unit=0;漢字表記/chk,local to_kanji=0;
 --check0:時分秒表記,0
+
+
+-- 数字を大字の漢数字に変換
+-- @param num 0 to 99
+-- @return 変換された文字列(paramの範囲を超えた場合は、"無限"が入る)
+local function convert_num_to_kanji(num)
+  local ONES_PLACE_TABLE = {"零", "壱", "弐", "参", "肆", "伍", "陸","漆", "捌", "玖"}
+  local TENS_PLACE = "拾"
+
+  if (99 < num) then
+    return "無限"
+  end
+
+
+  local ones_place = ONES_PLACE_TABLE[tonumber(string.format("%d",(num % 10) + 1))]
+  local tens_place
+
+  if (num < 10) then
+    tens_place = "　　"
+  else
+    if ((num % 10) < 1) then
+      ones_place = "　"
+      tens_num = "　　"
+    end
+
+    local tens_num
+    if (num < 20) then
+      tens_num = "　"
+    else
+      tens_num = ONES_PLACE_TABLE[tonumber(string.format("%d", (num / 10) + 1))]
+    end
+    tens_place = tens_num .. TENS_PLACE
+  end
+
+  return (tens_place .. ones_place)
+end
+
 
 local total_time = obj.totaltime
 local now_time = obj.time
@@ -26,6 +63,9 @@ else
   r = (now_time * (180 / total_time))
 end
 
+local hour = (time / 3600)
+local minites = ((time % 3600) / 60)
+local second = (time % 60)
 
 if (not obj.check0) then
   -- 秒表記
@@ -66,7 +106,11 @@ else
     m_unit = ":"
     s_unit = ""
   end
-    time_str = string.format("%02d%s%02d%s%02d%s", (time / 3600), h_unit, ((time % 3600) / 60), m_unit, (time % 60), s_unit)
+    if (to_kanji == 0) then
+      time_str = string.format("%02d%s%02d%s%02d%s", hour, h_unit, minites, m_unit, second, s_unit)
+    else
+      time_str = string.format("%s %s %s", convert_num_to_kanji(hour), convert_num_to_kanji(minites), convert_num_to_kanji(second))
+    end
 end
 
 local ring_color
